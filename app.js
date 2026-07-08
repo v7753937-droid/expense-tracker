@@ -1,5 +1,6 @@
 // Основные данные приложения
 let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+let filteredExpensesByPeriod = [...expenses];
 
 // Категории с эмодзи
 const categories = {
@@ -39,6 +40,10 @@ function setupEventListeners() {
     // Фильтры
     document.getElementById('filterCategory').addEventListener('change', renderExpenses);
     document.getElementById('filterDate').addEventListener('change', renderExpenses);
+    
+    // Фильтрация по периоду в аналитике
+    document.getElementById('applyPeriodFilter').addEventListener('click', applyPeriodFilter);
+    document.getElementById('resetPeriodFilter').addEventListener('click', resetPeriodFilter);
 }
 
 // Обработка добавления траты
@@ -64,6 +69,7 @@ function handleAddExpense(e) {
     };
     
     expenses.push(expense);
+    filteredExpensesByPeriod = [...expenses];
     saveExpenses();
     renderExpenses();
     updateAnalytics();
@@ -139,6 +145,7 @@ function renderExpenses() {
 function deleteExpense(id) {
     if (confirm('Вы уверены, что хотите удалить эту трату?')) {
         expenses = expenses.filter(exp => exp.id !== id);
+        filteredExpensesByPeriod = [...expenses];
         saveExpenses();
         renderExpenses();
         updateAnalytics();
@@ -147,8 +154,8 @@ function deleteExpense(id) {
 
 // Обновление аналитики
 function updateAnalytics() {
-    const totalAmount = expenses.reduce((sum, exp) => sum + exp.amount, 0);
-    const totalCount = expenses.length;
+    const totalAmount = filteredExpensesByPeriod.reduce((sum, exp) => sum + exp.amount, 0);
+    const totalCount = filteredExpensesByPeriod.length;
     const averageAmount = totalCount > 0 ? totalAmount / totalCount : 0;
     
     // Обновить карточки
@@ -167,14 +174,14 @@ function updateAnalytics() {
 function updateCategoryBreakdown(totalAmount) {
     const container = document.getElementById('categoryBreakdown');
     
-    if (expenses.length === 0) {
+    if (filteredExpensesByPeriod.length === 0) {
         container.innerHTML = '<p class="empty-state">Нет данных для анализа</p>';
         return;
     }
     
     // Подсчёт по категориям
     const categoryTotals = {};
-    expenses.forEach(exp => {
+    filteredExpensesByPeriod.forEach(exp => {
         if (!categoryTotals[exp.category]) {
             categoryTotals[exp.category] = 0;
         }
@@ -204,13 +211,13 @@ function updateCategoryBreakdown(totalAmount) {
 function updateRecentExpenses() {
     const container = document.getElementById('recentExpenses');
     
-    if (expenses.length === 0) {
+    if (filteredExpensesByPeriod.length === 0) {
         container.innerHTML = '<p class="empty-state">Нет недавних трат</p>';
         return;
     }
     
     // Получить последние 5 трат
-    const recentExpenses = [...expenses]
+    const recentExpenses = [...filteredExpensesByPeriod]
         .sort((a, b) => new Date(b.date) - new Date(a.date))
         .slice(0, 5);
     
@@ -235,4 +242,42 @@ function formatDate(dateString) {
 // Сохранение в localStorage
 function saveExpenses() {
     localStorage.setItem('expenses', JSON.stringify(expenses));
+}
+
+// Применить фильтр по периоду
+function applyPeriodFilter() {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    
+    if (!startDate && !endDate) {
+        alert('Выберите хотя бы одну дату');
+        return;
+    }
+    
+    filteredExpensesByPeriod = expenses.filter(expense => {
+        const expenseDate = new Date(expense.date);
+        let matches = true;
+        
+        if (startDate) {
+            matches = matches && expenseDate >= new Date(startDate);
+        }
+        
+        if (endDate) {
+            matches = matches && expenseDate <= new Date(endDate);
+        }
+        
+        return matches;
+    });
+    
+    updateAnalytics();
+    alert('Фильтр применён');
+}
+
+// Сбросить фильтр по периоду
+function resetPeriodFilter() {
+    document.getElementById('startDate').value = '';
+    document.getElementById('endDate').value = '';
+    filteredExpensesByPeriod = [...expenses];
+    updateAnalytics();
+    alert('Фильтр сброшен');
 }
