@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Учёт трат</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💰 Учёт трат</h1>
+            <nav>
+                <button class="nav-btn active" data-tab="expenses">Траты</button>
+                <button class="nav-btn" data-tab="analytics">Аналитика</button>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Секция трат -->
+            <section id="expenses" class="tab-content active">
+                <div class="add-expense-form">
+                    <h2>Добавить трату</h2>
+                    <form id="expenseForm">
+                        <div class="form-group">
+                            <label for="amount">Сумма (₽)</label>
+                            <input type="number" id="amount" required min="0.01" step="0.01" placeholder="0.00">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="category">Категория</label>
+                            <select id="category" required>
+                                <option value="">Выберите категорию</option>
+                                <option value="еда">🍔 Еда</option>
+                                <option value="транспорт">🚗 Транспорт</option>
+                                <option value="развлечения">🎮 Развлечения</option>
+                                <option value="покупки">🛍️ Покупки</option>
+                                <option value="здоровье">💊 Здоровье</option>
+                                <option value="коммунальные">🏠 Коммунальные</option>
+                                <option value="образование">📚 Образование</option>
+                                <option value="другое">📦 Другое</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="description">Описание</label>
+                            <input type="text" id="description" placeholder="Описание траты">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="date">Дата</label>
+                            <input type="date" id="date" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Добавить</button>
+                    </form>
+                </div>
+
+                <div class="expenses-list">
+                    <div class="filters">
+                        <h2>Список трат</h2>
+                        <div class="filter-controls">
+                            <select id="filterCategory">
+                                <option value="">Все категории</option>
+                                <option value="еда">🍔 Еда</option>
+                                <option value="транспорт">🚗 Транспорт</option>
+                                <option value="развлечения">🎮 Развлечения</option>
+                                <option value="покупки">🛍️ Покупки</option>
+                                <option value="здоровье">💊 Здоровье</option>
+                                <option value="коммунальные">🏠 Коммунальные</option>
+                                <option value="образование">📚 Образование</option>
+                                <option value="другое">📦 Другое</option>
+                            </select>
+                            <input type="date" id="filterDate">
+                        </div>
+                    </div>
+                    
+                    <div id="expensesContainer" class="expenses-container">
+                        <p class="empty-state">Нет трат. Добавьте первую трату!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Секция аналитики -->
+            <section id="analytics" class="tab-content">
+                <h2>Аналитика</h2>
+                
+                <div class="analytics-cards">
+                    <div class="analytics-card">
+                        <h3>Общая сумма</h3>
+                        <p class="total-amount" id="totalAmount">0 ₽</p>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Количество трат</h3>
+                        <p class="total-count" id="totalCount">0</p>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Средняя трата</h3>
+                        <p class="average-amount" id="averageAmount">0 ₽</p>
+                    </div>
+                </div>
+
+                <div class="category-breakdown">
+                    <h3>Траты по категориям</h3>
+                    <div id="categoryBreakdown" class="category-breakdown-list">
+                        <p class="empty-state">Нет данных для анализа</p>
+                    </div>
+                </div>
+
+                <div class="recent-expenses">
+                    <h3>Последние траты</h3>
+                    <div id="recentExpenses" class="recent-expenses-list">
+                        <p class="empty-state">Нет недавних трат</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
