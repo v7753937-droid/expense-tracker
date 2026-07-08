@@ -76,6 +76,42 @@ main {
     animation: fadeIn 0.3s ease;
 }
 
+.period-filter {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.period-filter h3 {
+    color: #667eea;
+    margin-bottom: 20px;
+    font-size: 1.3em;
+}
+
+.period-controls {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.period-controls .form-group {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 0;
+}
+
+.period-controls .btn {
+    margin-bottom: 0;
+    min-width: 120px;
+}
+
+.period-controls .btn-danger {
+    background: #ff4757;
+    color: white;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
